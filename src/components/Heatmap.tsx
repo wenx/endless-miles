@@ -33,7 +33,7 @@ function getDaysInYear(year: number) {
 }
 
 const LEFT_PAD = 24;
-const MIN_CELL = 8;
+const MIN_CELL = 4;
 const GAP = 2;
 
 export default function Heatmap({ data, startYear, endYear }: Props) {
@@ -98,15 +98,15 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
   const yearDist = yearDays.reduce((s, d) => s + (data.get(d)?.distance || 0), 0);
 
   return (
-    <div ref={containerRef}>
-      <div className="flex items-center justify-between mb-4">
+    <div ref={containerRef} className="overflow-x-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
         <h2 className="text-xl font-semibold">Activity Heatmap</h2>
-        <div className="flex gap-1">
+        <div className="flex flex-wrap gap-1">
           {years.map((y) => (
             <button
               key={y}
               onClick={() => setSelectedYear(y)}
-              className={`px-3 py-1 text-sm rounded-md transition-colors ${
+              className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-md transition-colors ${
                 y === selectedYear
                   ? "bg-neutral-700 text-white"
                   : "text-neutral-500 hover:text-neutral-300"

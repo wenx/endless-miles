@@ -2,11 +2,14 @@
 
 Personal running & cycling data visualization, powered by Strava data.
 
+Live site: https://endless-miles-peach.vercel.app
+
 ## Tech Stack
 
 - Next.js + TypeScript + Tailwind CSS
 - Strava API (OAuth2)
 - Recharts
+- Vercel (hosting, auto-deploy on push)
 
 ## Quick Start
 
@@ -15,35 +18,41 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
-## Syncing Strava Data
+## Syncing Strava Data & Deploying
 
-Pull latest activities from Strava:
+When you have new activities on Strava and want to update the website, run:
 
 ```bash
+cd ~/Documents/projects/run-dashboard
+
+# Step 1: Pull latest activities from Strava
 npm run sync
+
+# Step 2: Commit and push — Vercel will auto-deploy
+git add data/activities.json
+git commit -m "sync strava data"
+git push
 ```
 
-This will:
-1. Refresh your Strava access token
-2. Fetch all activities (handles pagination & rate limiting)
-3. Save to `data/activities.json`
+That's it. Vercel detects the push and rebuilds automatically. The site updates within ~30 seconds.
 
-Refresh the page to see updated data.
+### What `npm run sync` does
 
-### Prerequisites
+1. Refreshes your Strava access token (tokens expire every 6 hours)
+2. Fetches all activities from Strava API (handles pagination & rate limiting)
+3. Saves to `data/activities.json`
 
-`.env.local` with Strava API credentials:
+### One-liner
 
+If you want to do it all in one command:
+
+```bash
+cd ~/Documents/projects/run-dashboard && npm run sync && git add data/activities.json && git commit -m "sync strava data" && git push
 ```
-STRAVA_CLIENT_ID=your_client_id
-STRAVA_CLIENT_SECRET=your_client_secret
-```
-
-`data/.tokens.json` with your refresh token (created during initial OAuth flow).
 
 ### Automate with Cron (Optional)
 
-To sync daily at 6am:
+To sync and deploy daily at 6am automatically:
 
 ```bash
 crontab -e
@@ -52,7 +61,14 @@ crontab -e
 Add:
 
 ```
-0 6 * * * cd ~/Documents/projects/run-dashboard && npm run sync >> /tmp/endless-miles-sync.log 2>&1
+0 6 * * * cd ~/Documents/projects/run-dashboard && npm run sync && git add data/activities.json && git diff --cached --quiet || (git commit -m "auto sync strava data" && git push) >> /tmp/endless-miles-sync.log 2>&1
 ```
 
-Or just run `npm run sync` manually whenever you want fresh data.
+### Prerequisites
+
+These files must exist (already set up):
+
+- `.env.local` — Strava API credentials (`STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET`)
+- `data/.tokens.json` — Strava refresh token (created during initial OAuth flow)
+
+Both are git-ignored and stay local only.
