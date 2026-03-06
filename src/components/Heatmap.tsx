@@ -1,7 +1,7 @@
 "use client";
 
 import { DayData } from "@/types/strava";
-import { useMemo, useState, useRef, useEffect } from "react";
+import { useMemo, useState } from "react";
 
 interface Props {
   data: Map<string, DayData>;
@@ -32,13 +32,12 @@ function getDaysInYear(year: number) {
   return days;
 }
 
-const MIN_CELL = 4;
+const CELL = 12;
 const GAP = 2;
+const COL = CELL + GAP;
 
 export default function Heatmap({ data, startYear, endYear }: Props) {
   const [selectedYear, setSelectedYear] = useState(endYear);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [cellSize, setCellSize] = useState(12);
 
   const years = useMemo(() => {
     const arr = [];
@@ -66,22 +65,6 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
     return result;
   }, [days, firstDayOfWeek]);
 
-  // Responsive cell size
-  useEffect(() => {
-    function calc() {
-      if (!containerRef.current) return;
-      const availableWidth = containerRef.current.clientWidth;
-      const numWeeks = weeks.length;
-      const size = Math.floor((availableWidth - (numWeeks - 1) * GAP) / numWeeks);
-      setCellSize(Math.max(MIN_CELL, size));
-    }
-    calc();
-    window.addEventListener("resize", calc);
-    return () => window.removeEventListener("resize", calc);
-  }, [weeks.length]);
-
-  const col = cellSize + GAP;
-
   const monthLabels = useMemo(() => {
     const labels: { label: string; weekIndex: number }[] = [];
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -96,8 +79,10 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
   const yearDays = days.filter((d) => data.has(d));
   const yearDist = yearDays.reduce((s, d) => s + (data.get(d)?.distance || 0), 0);
 
+  const gridWidth = weeks.length * COL - GAP;
+
   return (
-    <div ref={containerRef} className="overflow-x-auto">
+    <div>
       <div className="mb-4">
         <h2 className="text-xl font-semibold mb-2">Activity Heatmap</h2>
         <div className="flex flex-wrap gap-1">
@@ -121,44 +106,47 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
         <span style={{ fontFamily: "var(--font-mono)" }}>{yearDays.length}</span> active days · <span style={{ fontFamily: "var(--font-mono)" }}>{Math.round(yearDist)}</span> km
       </div>
 
-      {/* Month labels */}
-      <div style={{ height: 18, position: "relative" }}>
-        {monthLabels.map((m) => (
-          <span
-            key={m.label}
-            className="text-xs text-neutral-500"
-            style={{ position: "absolute", left: m.weekIndex * col }}
-          >
-            {m.label}
-          </span>
-        ))}
-      </div>
+      {/* Scrollable heatmap area */}
+      <div className="overflow-x-auto">
+        <div style={{ width: gridWidth, minWidth: gridWidth }}>
+          {/* Month labels */}
+          <div style={{ height: 18, position: "relative" }}>
+            {monthLabels.map((m) => (
+              <span
+                key={m.label}
+                className="text-xs text-neutral-500"
+                style={{ position: "absolute", left: m.weekIndex * COL }}
+              >
+                {m.label}
+              </span>
+            ))}
+          </div>
 
-      {/* Grid */}
-      <div style={{ position: "relative" }}>
-        <div style={{ display: "flex", gap: GAP, width: "100%" }}>
-          {weeks.map((week, wi) => (
-            <div key={wi} style={{ display: "flex", flexDirection: "column", gap: GAP, flex: 1 }}>
-              {week.map((day, di) => {
-                if (!day)
-                  return <div key={di} style={{ aspectRatio: "1", width: "100%" }} />;
-                const d = data.get(day);
-                const dist = d?.distance || 0;
-                return (
-                  <div
-                    key={day}
-                    style={{
-                      aspectRatio: "1",
-                      width: "100%",
-                      backgroundColor: getColor(dist),
-                      borderRadius: 2,
-                    }}
-                    title={`${day}: ${dist > 0 ? dist.toFixed(1) + " km" : "Rest day"}`}
-                  />
-                );
-              })}
-            </div>
-          ))}
+          {/* Grid */}
+          <div style={{ display: "flex", gap: GAP }}>
+            {weeks.map((week, wi) => (
+              <div key={wi} style={{ display: "flex", flexDirection: "column", gap: GAP }}>
+                {week.map((day, di) => {
+                  if (!day)
+                    return <div key={di} style={{ width: CELL, height: CELL }} />;
+                  const d = data.get(day);
+                  const dist = d?.distance || 0;
+                  return (
+                    <div
+                      key={day}
+                      style={{
+                        width: CELL,
+                        height: CELL,
+                        backgroundColor: getColor(dist),
+                        borderRadius: 2,
+                      }}
+                      title={`${day}: ${dist > 0 ? dist.toFixed(1) + " km" : "Rest day"}`}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -169,8 +157,8 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
           <div
             key={v}
             style={{
-              width: cellSize,
-              height: cellSize,
+              width: CELL,
+              height: CELL,
               backgroundColor: getColor(v),
               borderRadius: 2,
             }}
