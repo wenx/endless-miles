@@ -1,0 +1,22 @@
+{
+  "id": 9962943,
+  "username": null,
+  "resource_state": 2,
+  "firstname": "Kevin",
+  "lastname": "W",
+  "bio": null,
+  "city": "Beijing",
+  "state": "",
+  "country": "China",
+  "sex": "M",
+  "premium": true,
+  "summit": true,
+  "created_at": "2015-06-27T22:21:33Z",
+  "updated_at": "2026-01-04T05:23:47Z",
+  "badge_type_id": 1,
+  "weight": 71,
+  "profile_medium": "https://dgalywyr863hv.cloudfront.net/pictures/athletes/9962943/3006045/2/medium.jpg",
+  "profile": "https://dgalywyr863hv.cloudfront.net/pictures/athletes/9962943/3006045/2/large.jpg",
+  "friend": null,
+  "follower": null
+}
