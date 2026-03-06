@@ -9,14 +9,9 @@ interface Props {
   endYear: number;
 }
 
-function getColor(distance: number): string {
-  if (distance === 0) return "#1a1a1a";
-  if (distance < 3) return "#2d4a22";
-  if (distance < 5) return "#3a6b2a";
-  if (distance < 8) return "#4a8c34";
-  if (distance < 12) return "#5aad3e";
-  if (distance < 16) return "#6cce48";
-  return "#7def52";
+function getOpacity(distance: number, maxDist: number): number {
+  if (distance === 0) return 0;
+  return (distance / maxDist) * 0.8 + 0.2;
 }
 
 function getDaysInYear(year: number) {
@@ -32,9 +27,10 @@ function getDaysInYear(year: number) {
   return days;
 }
 
-const CELL = 12;
-const GAP = 2;
-const COL = CELL + GAP;
+const CELL = 14;
+const GAP = 3;
+const STEP = CELL + GAP;
+const MONTH_LABEL_HEIGHT = 18;
 
 export default function Heatmap({ data, startYear, endYear }: Props) {
   const [selectedYear, setSelectedYear] = useState(endYear);
@@ -78,8 +74,17 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
 
   const yearDays = days.filter((d) => data.has(d));
   const yearDist = yearDays.reduce((s, d) => s + (data.get(d)?.distance || 0), 0);
+  const maxDist = useMemo(() => {
+    let max = 0;
+    for (const d of days) {
+      const v = data.get(d)?.distance || 0;
+      if (v > max) max = v;
+    }
+    return max || 1;
+  }, [days, data]);
 
-  const gridWidth = weeks.length * COL - GAP;
+  const svgWidth = weeks.length * STEP - GAP;
+  const svgHeight = 7 * STEP - GAP + MONTH_LABEL_HEIGHT;
 
   return (
     <div>
@@ -106,63 +111,61 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
         <span style={{ fontFamily: "var(--font-mono)" }}>{yearDays.length}</span> active days · <span style={{ fontFamily: "var(--font-mono)" }}>{Math.round(yearDist)}</span> km
       </div>
 
-      {/* Scrollable heatmap area */}
-      <div className="overflow-x-auto">
-        <div style={{ width: gridWidth, minWidth: gridWidth }}>
+      {/* Scrollable SVG heatmap */}
+      <div className="overflow-x-auto pb-2">
+        <svg width={svgWidth} height={svgHeight} className="block">
           {/* Month labels */}
-          <div style={{ height: 18, position: "relative" }}>
-            {monthLabels.map((m) => (
-              <span
-                key={m.label}
-                className="text-xs text-neutral-500"
-                style={{ position: "absolute", left: m.weekIndex * COL }}
-              >
-                {m.label}
-              </span>
-            ))}
-          </div>
+          {monthLabels.map((m) => (
+            <text
+              key={m.label}
+              x={m.weekIndex * STEP}
+              y={12}
+              fill="#666"
+              fontSize={11}
+              fontFamily="var(--font-sans)"
+            >
+              {m.label}
+            </text>
+          ))}
 
-          {/* Grid */}
-          <div style={{ display: "flex", gap: GAP }}>
-            {weeks.map((week, wi) => (
-              <div key={wi} style={{ display: "flex", flexDirection: "column", gap: GAP }}>
-                {week.map((day, di) => {
-                  if (!day)
-                    return <div key={di} style={{ width: CELL, height: CELL }} />;
-                  const d = data.get(day);
-                  const dist = d?.distance || 0;
-                  return (
-                    <div
-                      key={day}
-                      style={{
-                        width: CELL,
-                        height: CELL,
-                        backgroundColor: getColor(dist),
-                        borderRadius: 2,
-                      }}
-                      title={`${day}: ${dist > 0 ? dist.toFixed(1) + " km" : "Rest day"}`}
-                    />
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-        </div>
+          {/* Day cells */}
+          {weeks.map((week, wi) =>
+            week.map((day, di) => {
+              if (!day) return null;
+              const d = data.get(day);
+              const dist = d?.distance || 0;
+              return (
+                <rect
+                  key={day}
+                  x={wi * STEP}
+                  y={di * STEP + MONTH_LABEL_HEIGHT}
+                  width={CELL}
+                  height={CELL}
+                  rx={2}
+                  fill={dist > 0 ? "#4ade80" : "#1a1a1a"}
+                  fillOpacity={dist > 0 ? getOpacity(dist, maxDist) : 1}
+                >
+                  <title>{`${day}: ${dist > 0 ? dist.toFixed(1) + " km" : "Rest day"}`}</title>
+                </rect>
+              );
+            })
+          )}
+        </svg>
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-1 mt-3 text-xs text-neutral-500">
+      <div className="flex items-center gap-2 mt-2 text-xs text-neutral-500">
         <span>Less</span>
-        {[0, 3, 5, 8, 12, 16].map((v) => (
-          <div
-            key={v}
-            style={{
-              width: CELL,
-              height: CELL,
-              backgroundColor: getColor(v),
-              borderRadius: 2,
-            }}
-          />
+        {[0, 0.2, 0.4, 0.6, 0.8, 1.0].map((opacity, i) => (
+          <svg key={i} width={CELL} height={CELL}>
+            <rect
+              width={CELL}
+              height={CELL}
+              rx={2}
+              fill={i === 0 ? "#1a1a1a" : "#4ade80"}
+              fillOpacity={i === 0 ? 1 : opacity}
+            />
+          </svg>
         ))}
         <span>More</span>
       </div>
