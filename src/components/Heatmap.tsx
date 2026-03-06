@@ -136,20 +136,20 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
 
       {/* Grid */}
       <div style={{ position: "relative" }}>
-        <div style={{ display: "flex", gap: GAP }}>
+        <div style={{ display: "flex", gap: GAP, width: "100%" }}>
           {weeks.map((week, wi) => (
-            <div key={wi} style={{ display: "flex", flexDirection: "column", gap: GAP }}>
+            <div key={wi} style={{ display: "flex", flexDirection: "column", gap: GAP, flex: 1 }}>
               {week.map((day, di) => {
                 if (!day)
-                  return <div key={di} style={{ width: cellSize, height: cellSize }} />;
+                  return <div key={di} style={{ aspectRatio: "1", width: "100%" }} />;
                 const d = data.get(day);
                 const dist = d?.distance || 0;
                 return (
                   <div
                     key={day}
                     style={{
-                      width: cellSize,
-                      height: cellSize,
+                      aspectRatio: "1",
+                      width: "100%",
                       backgroundColor: getColor(dist),
                       borderRadius: 2,
                     }}
