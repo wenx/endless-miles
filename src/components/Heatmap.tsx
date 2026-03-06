@@ -99,8 +99,8 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
 
   return (
     <div ref={containerRef} className="overflow-x-auto">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-        <h2 className="text-xl font-semibold">Activity Heatmap</h2>
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold mb-2">Activity Heatmap</h2>
         <div className="flex flex-wrap gap-1">
           {years.map((y) => (
             <button
