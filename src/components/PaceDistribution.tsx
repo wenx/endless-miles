@@ -61,7 +61,7 @@ export default function PaceDistribution({ activities, isRun }: Props) {
               contentStyle={{ background: "#111", border: "1px solid #282828", borderRadius: 8, boxShadow: "0 8px 24px rgba(0,0,0,0.6)" }}
               labelStyle={{ color: "#888", fontSize: 12, marginBottom: 4 }}
               itemStyle={{ color: "#e5e5e5", fontSize: 13 }}
-              formatter={(value: number) => [`${value}`, "Count"]}
+              formatter={(value) => [`${value}`, "Count"]}
             />
             <Bar dataKey="count" radius={[3, 3, 0, 0]}>
               {data.map((entry, i) => {
