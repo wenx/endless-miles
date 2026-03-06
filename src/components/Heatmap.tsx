@@ -32,7 +32,6 @@ function getDaysInYear(year: number) {
   return days;
 }
 
-const LEFT_PAD = 24;
 const MIN_CELL = 4;
 const GAP = 2;
 
@@ -71,7 +70,7 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
   useEffect(() => {
     function calc() {
       if (!containerRef.current) return;
-      const availableWidth = containerRef.current.clientWidth - LEFT_PAD;
+      const availableWidth = containerRef.current.clientWidth;
       const numWeeks = weeks.length;
       const size = Math.floor((availableWidth - (numWeeks - 1) * GAP) / numWeeks);
       setCellSize(Math.max(MIN_CELL, size));
@@ -123,7 +122,7 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
       </div>
 
       {/* Month labels */}
-      <div style={{ height: 18, position: "relative", marginLeft: LEFT_PAD }}>
+      <div style={{ height: 18, position: "relative" }}>
         {monthLabels.map((m) => (
           <span
             key={m.label}
@@ -135,26 +134,9 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
         ))}
       </div>
 
-      {/* Grid + weekday labels */}
+      {/* Grid */}
       <div style={{ position: "relative" }}>
-        {/* Weekday labels */}
-        <div
-          className="flex flex-col text-neutral-500"
-          style={{ position: "absolute", left: 0, top: 0, gap: GAP }}
-        >
-          {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-            <div
-              key={i}
-              style={{ height: cellSize, lineHeight: `${cellSize}px`, fontSize: 10, width: LEFT_PAD - 4 }}
-              className="text-right"
-            >
-              {i % 2 === 1 ? d : ""}
-            </div>
-          ))}
-        </div>
-
-        {/* Week columns */}
-        <div style={{ marginLeft: LEFT_PAD, display: "flex", gap: GAP }}>
+        <div style={{ display: "flex", gap: GAP }}>
           {weeks.map((week, wi) => (
             <div key={wi} style={{ display: "flex", flexDirection: "column", gap: GAP }}>
               {week.map((day, di) => {
