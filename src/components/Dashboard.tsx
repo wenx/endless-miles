@@ -110,7 +110,7 @@ export default function Dashboard({ allActivities }: Props) {
 
         {/* Footer */}
         <footer className="text-center text-neutral-600 text-sm pt-8 border-t border-neutral-800">
-          Data from Strava · Built with Next.js
+          Data from Strava · Built with Next.js · Pixel font by <a href="https://github.com/sunaku/tamzen-font" className="text-neutral-500 hover:text-neutral-300 underline" target="_blank" rel="noopener noreferrer">Tamzen</a>
         </footer>
       </div>
     </div>
