@@ -107,7 +107,7 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
         </div>
       </div>
 
-      <div className="text-sm text-neutral-500 mb-3">
+      <div className="text-sm text-neutral-500 mb-3" style={{ fontFamily: "var(--font-pixel)" }}>
         <span style={{ fontFamily: "var(--font-mono)" }}>{yearDays.length}</span> active days · <span style={{ fontFamily: "var(--font-mono)" }}>{Math.round(yearDist)}</span> km
       </div>
 
@@ -154,7 +154,7 @@ export default function Heatmap({ data, startYear, endYear }: Props) {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-2 mt-2 text-xs text-neutral-500">
+      <div className="flex items-center gap-2 mt-2 text-xs text-neutral-500" style={{ fontFamily: "var(--font-pixel)" }}>
         <span>Less</span>
         {[0, 0.2, 0.4, 0.6, 0.8, 1.0].map((opacity, i) => (
           <svg key={i} width={CELL} height={CELL}>

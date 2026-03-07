@@ -20,6 +20,8 @@ export interface StravaActivity {
     summary_polyline: string;
     polyline?: string;
   };
+  timezone?: string;
+  trainer?: boolean;
   suffer_score?: number;
   calories?: number;
   gear_id?: string;

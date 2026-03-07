@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body
         className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
-        style={{ fontFamily: "var(--font-sans), system-ui, sans-serif" }}
+        style={{ fontFamily: "var(--font-sans), system-ui, sans-serif", ["--font-pixel" as string]: "Tamzen, monospace" }}
       >
         {children}
       </body>

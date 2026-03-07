@@ -9,6 +9,11 @@ import Heatmap from "./Heatmap";
 import PaceDistribution from "./PaceDistribution";
 import DistanceHistogram from "./DistanceHistogram";
 import TopRuns from "./TopRuns";
+import CountryStats from "./CountryStats";
+import TimeOfDay from "./TimeOfDay";
+import DayOfWeek from "./DayOfWeek";
+import HeartRateZones from "./HeartRateZones";
+import PaceHeartRate from "./PaceHeartRate";
 
 interface Props {
   allActivities: StravaActivity[];
@@ -21,7 +26,7 @@ const SPORT_TABS: { label: string; value: SportType; icon: string }[] = [
 ];
 
 export default function Dashboard({ allActivities }: Props) {
-  const [sportType, setSportType] = useState<SportType>("Run");
+  const [sportType, setSportType] = useState<SportType>("All");
 
   const activities = useMemo(() => filterByType(allActivities, sportType), [allActivities, sportType]);
   const stats = useMemo(() => overallStats(activities), [activities]);
@@ -75,15 +80,32 @@ export default function Dashboard({ allActivities }: Props) {
           <YearlyChart data={yearSummaries} sportType={sportType} />
         </section>
 
-        {/* Charts Row */}
+        {/* Charts Row 1 */}
         <section className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-8">
           <PaceDistribution activities={activities} isRun={isRun} />
           <DistanceHistogram activities={activities} isRide={!isRun && sportType === "Ride"} />
         </section>
 
+        {/* Charts Row 2 */}
+        <section className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <TimeOfDay activities={activities} />
+          <DayOfWeek activities={activities} />
+        </section>
+
+        {/* Heart Rate */}
+        <section className="mb-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <HeartRateZones activities={activities} />
+          <PaceHeartRate activities={activities} />
+        </section>
+
         {/* Top Runs */}
         <section className="mb-16">
           <TopRuns activities={activities} sportType={sportType} />
+        </section>
+
+        {/* Country Stats */}
+        <section className="mb-16">
+          <CountryStats activities={activities} />
         </section>
 
         {/* Footer */}

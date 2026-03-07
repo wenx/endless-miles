@@ -3,6 +3,8 @@ import path from "path";
 import { StravaActivity } from "@/types/strava";
 import Dashboard from "@/components/Dashboard";
 
+export const dynamic = "force-dynamic";
+
 async function loadActivities(): Promise<StravaActivity[]> {
   const filePath = path.join(process.cwd(), "data", "activities.json");
   const raw = await readFile(filePath, "utf-8");

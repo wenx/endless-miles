@@ -50,7 +50,7 @@ export default function YearlyChart({ data, sportType }: Props) {
               contentStyle={{ background: "#111", border: "1px solid #282828", borderRadius: 8, boxShadow: "0 8px 24px rgba(0,0,0,0.6)" }}
               labelStyle={{ color: "#888", fontSize: 12, marginBottom: 4 }}
               itemStyle={{ color: "#e5e5e5", fontSize: 13 }}
-              formatter={(value) => [`${Number(value).toLocaleString()}${unit}`, label]}
+              formatter={(value) => [`${String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}${unit}`, label]}
             />
             <Bar dataKey={dataKey} radius={[4, 4, 0, 0]}>
               {data.map((entry) => (

@@ -11,7 +11,7 @@ interface Props {
 }
 
 function formatNumber(n: number) {
-  return n.toLocaleString();
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export default function StatsOverview({ totalDistance, totalDuration, totalElevation, totalActivities, sportType }: Props) {
@@ -31,7 +31,7 @@ export default function StatsOverview({ totalDistance, totalDuration, totalEleva
             {s.value}
             {s.unit && <span className="text-lg md:text-xl font-normal text-neutral-400 ml-1">{s.unit}</span>}
           </div>
-          <div className="text-sm text-neutral-500 mt-1 uppercase tracking-wider">{s.label}</div>
+          <div className="text-sm text-neutral-500 mt-1 uppercase tracking-wider" style={{ fontFamily: "var(--font-pixel)" }}>{s.label}</div>
         </div>
       ))}
     </div>

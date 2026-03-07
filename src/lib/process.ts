@@ -61,7 +61,7 @@ export function summarizeByYear(activities: StravaActivity[]): YearSummary[] {
   const years = new Map<number, StravaActivity[]>();
 
   for (const a of activities) {
-    const year = new Date(a.start_date_local).getFullYear();
+    const year = parseInt(a.start_date_local.slice(0, 4), 10);
     if (!years.has(year)) years.set(year, []);
     years.get(year)!.push(a);
   }
