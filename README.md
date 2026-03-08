@@ -23,7 +23,7 @@ npm run dev        # http://localhost:3000
 When you have new activities on Strava and want to update the website, run:
 
 ```bash
-cd ~/Documents/projects/run-dashboard
+cd ~/Documents/projects/endless-miles
 
 # Step 1: Pull latest activities from Strava
 npm run sync
@@ -47,7 +47,7 @@ That's it. Vercel detects the push and rebuilds automatically. The site updates 
 If you want to do it all in one command:
 
 ```bash
-cd ~/Documents/projects/run-dashboard && npm run sync && git add data/activities.json && git commit -m "sync strava data" && git push
+cd ~/Documents/projects/endless-miles && npm run sync && git add data/activities.json && git commit -m "sync strava data" && git push
 ```
 
 ### Automate with Cron (Optional)
@@ -61,7 +61,7 @@ crontab -e
 Add:
 
 ```
-0 6 * * * cd ~/Documents/projects/run-dashboard && npm run sync && git add data/activities.json && git diff --cached --quiet || (git commit -m "auto sync strava data" && git push) >> /tmp/endless-miles-sync.log 2>&1
+0 6 * * * cd ~/Documents/projects/endless-miles && npm run sync && git add data/activities.json && git diff --cached --quiet || (git commit -m "auto sync strava data" && git push) >> /tmp/endless-miles-sync.log 2>&1
 ```
 
 ### Prerequisites
