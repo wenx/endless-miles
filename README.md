@@ -50,23 +50,19 @@ If you want to do it all in one command:
 cd ~/Documents/projects/endless-miles && npm run sync && git add data/activities.json && git commit -m "sync strava data" && git push
 ```
 
-### Automate with Cron (Optional)
+### Auto Sync (GitHub Actions)
 
-To sync and deploy daily at 6am automatically:
+A GitHub Actions workflow runs daily at 06:00 Beijing time (UTC 22:00), automatically syncing Strava data and deploying via Vercel.
 
-```bash
-crontab -e
-```
+- Workflow: `.github/workflows/daily-strava-sync.yml`
+- Can also be triggered manually from the Actions tab
+- Refresh token is updated in GitHub Secrets after each sync
 
-Add:
-
-```
-0 6 * * * cd ~/Documents/projects/endless-miles && npm run sync && git add data/activities.json && git diff --cached --quiet || (git commit -m "auto sync strava data" && git push) >> /tmp/endless-miles-sync.log 2>&1
-```
+GitHub Secrets required: `STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET`, `STRAVA_REFRESH_TOKEN`, `GH_PAT`
 
 ### Prerequisites
 
-These files must exist (already set up):
+These files must exist for local sync (already set up):
 
 - `.env.local` — Strava API credentials (`STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET`)
 - `data/.tokens.json` — Strava refresh token (created during initial OAuth flow)
