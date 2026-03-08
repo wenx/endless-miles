@@ -57,7 +57,7 @@ export default function TopRuns({ activities, sportType }: Props) {
               <tr key={a.id} className="border-t border-neutral-800">
                 <td className="py-2 pr-4 text-neutral-500">{i + 1}</td>
                 <td className="py-2 pr-4 text-neutral-400" style={{ fontFamily: "var(--font-mono)" }}>{a.start_date_local.slice(0, 10)}</td>
-                <td className="py-2 pr-4">{a.name}</td>
+                <td className="py-2 pr-4" style={{ fontFamily: "var(--font-pixel)" }}>{a.name}</td>
                 <td className="py-2 pr-4 text-right font-semibold" style={{ fontFamily: "var(--font-mono)" }}>{(a.distance / 1000).toFixed(2)} km</td>
                 <td className="py-2 pr-4 text-right text-neutral-400" style={{ fontFamily: "var(--font-mono)" }}>{formatDuration(a.moving_time)}</td>
                 <td className="py-2 text-right text-neutral-400" style={{ fontFamily: "var(--font-mono)" }}>

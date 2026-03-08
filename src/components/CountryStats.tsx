@@ -61,7 +61,7 @@ export default function CountryStats({ activities }: Props) {
           <div key={c.country} className="flex items-center justify-between py-2 border-b border-neutral-800">
             <div className="flex items-center gap-2">
               <span>{c.flag}</span>
-              <span>{c.country}</span>
+              <span style={{ fontFamily: "var(--font-pixel)" }}>{c.country}</span>
             </div>
             <div className="flex items-center gap-4 text-sm">
               <span className="text-neutral-400" style={{ fontFamily: "var(--font-mono)" }}>{Math.round(c.distance)} km</span>
