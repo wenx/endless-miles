@@ -1,14 +1,12 @@
 "use client";
 
 import { StravaActivity } from "@/types/strava";
+import { RUN_TYPES, RIDE_TYPES } from "@/lib/process";
 import { useMemo } from "react";
 
 interface Props {
   activities: StravaActivity[];
 }
-
-const RUN_TYPES = new Set(["Run", "TrailRun", "VirtualRun"]);
-const RIDE_TYPES = new Set(["Ride", "VirtualRide", "GravelRide", "EBikeRide", "MountainBikeRide"]);
 
 const TZ_TO_COUNTRY: Record<string, [string, string]> = {
   "Asia/Shanghai": ["🇨🇳", "China"],
@@ -27,7 +25,7 @@ const TZ_TO_COUNTRY: Record<string, [string, string]> = {
   "America/Edmonton": ["🇨🇦", "Canada"],
   "Europe/Rome": ["🇮🇹", "Italy"],
   "Europe/Istanbul": ["🇹🇷", "Turkey"],
-  "Africa/Algiers": ["🇹🇳", "Tunisia"],
+  "Africa/Algiers": ["🇩🇿", "Algeria"],
   "Africa/Tunis": ["🇹🇳", "Tunisia"],
 };
 

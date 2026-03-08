@@ -54,6 +54,7 @@ export async function fetchAllActivities(
   const allActivities: StravaActivity[] = [];
   let page = 1;
   const perPage = 200;
+  let retries = 0;
 
   while (true) {
     const params = new URLSearchParams({
@@ -67,15 +68,16 @@ export async function fetchAllActivities(
     });
 
     if (!res.ok) {
-      if (res.status === 429) {
-        // Rate limited — wait and retry
+      if (res.status === 429 && retries < 3) {
+        retries++;
         const retryAfter = Number(res.headers.get("Retry-After") || 60);
-        console.log(`Rate limited, waiting ${retryAfter}s...`);
+        console.log(`Rate limited, waiting ${retryAfter}s (retry ${retries}/3)...`);
         await new Promise((r) => setTimeout(r, retryAfter * 1000));
         continue;
       }
       throw new Error(`Strava API error: ${res.status}`);
     }
+    retries = 0;
 
     const activities: StravaActivity[] = await res.json();
     if (activities.length === 0) break;

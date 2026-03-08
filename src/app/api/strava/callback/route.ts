@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { exchangeToken, fetchAllActivities } from "@/lib/strava";
-import { filterRuns } from "@/lib/process";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
@@ -20,10 +19,7 @@ export async function GET(request: NextRequest) {
     const allActivities = await fetchAllActivities(tokenData.access_token);
     console.log(`Total activities: ${allActivities.length}`);
 
-    // Save ALL activities (not just runs)
-    const runs = filterRuns(allActivities);
-    console.log(`Running activities: ${runs.length}`);
-    console.log(`Total activities (all types): ${allActivities.length}`);
+    console.log(`Total activities: ${allActivities.length}`);
 
     const dataDir = path.join(process.cwd(), "data");
     await mkdir(dataDir, { recursive: true });
@@ -52,8 +48,7 @@ export async function GET(request: NextRequest) {
       success: true,
       athlete: `${tokenData.athlete.firstname} ${tokenData.athlete.lastname}`,
       totalActivities: allActivities.length,
-      runs: runs.length,
-      message: `Saved ${runs.length} running activities to data/activities.json`,
+      message: `Saved ${allActivities.length} activities to data/activities.json`,
     });
   } catch (error) {
     console.error("Strava callback error:", error);

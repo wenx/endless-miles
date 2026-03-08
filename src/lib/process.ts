@@ -2,8 +2,8 @@ import { StravaActivity, DayData, YearSummary } from "@/types/strava";
 
 export type SportType = "Run" | "Ride" | "All";
 
-const RUN_TYPES = new Set(["Run", "TrailRun", "VirtualRun"]);
-const RIDE_TYPES = new Set(["Ride", "VirtualRide", "GravelRide", "EBikeRide", "MountainBikeRide"]);
+export const RUN_TYPES = new Set(["Run", "TrailRun", "VirtualRun"]);
+export const RIDE_TYPES = new Set(["Ride", "VirtualRide", "GravelRide", "EBikeRide", "MountainBikeRide"]);
 
 export function filterByType(activities: StravaActivity[], type: SportType): StravaActivity[] {
   if (type === "All") return activities.filter((a) => {
@@ -13,11 +13,6 @@ export function filterByType(activities: StravaActivity[], type: SportType): Str
   if (type === "Run") return activities.filter((a) => RUN_TYPES.has(a.sport_type || a.type));
   if (type === "Ride") return activities.filter((a) => RIDE_TYPES.has(a.sport_type || a.type));
   return activities;
-}
-
-/** Keep for backward compat */
-export function filterRuns(activities: StravaActivity[]): StravaActivity[] {
-  return filterByType(activities, "Run");
 }
 
 export function aggregateByDay(activities: StravaActivity[]): Map<string, DayData> {
