@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync": "source .env.local && npx tsx scripts/refetch.ts"
+    "sync": "export $(cat .env.local | grep -v '^#' | xargs) && npx tsx scripts/refetch.ts"
   },
   "dependencies": {
     "next": "16.1.6",
