@@ -157,6 +157,16 @@ endless-miles/
     └── daily-strava-sync.yml
 ```
 
+## Changelog
+
+- **2026-03-09** — Open-sourced; added complete setup guide; GitHub Actions auto sync
+- **2026-03-08** — Code cleanup: deduplicate type sets, fix country mapping, add rate limit retries
+- **2026-03-08** — Renamed from `run-dashboard` to `endless-miles`; fixed Strava sync command
+- **2026-03-07** — Added Tamzen pixel font for data display
+- **2026-03-06** — Added time of day, day of week, heart rate, pace vs HR, country stats charts
+- **2026-03-05** — Rewrote heatmap with SVG; improved mobile layout
+- **2026-03-04** — Initial release: yearly charts, stats overview, top activities, distance histogram, heatmap
+
 ## License
 
 MIT
